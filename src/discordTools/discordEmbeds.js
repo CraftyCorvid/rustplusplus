@@ -59,6 +59,11 @@ module.exports = {
                 name: Client.client.intlGet(guildId, 'customCommand'),
                 value: `\`${instance.generalSettings.prefix}${entity.command}\``,
                 inline: true
+            },
+            {
+                name: Client.client.intlGet(guildId, 'autoOnOffTimer'),
+                value: `\`${instance.generalSettings.prefix}${entity.onOffTimer}\``,
+                inline: true
             }],
             timestamp: true
         });
