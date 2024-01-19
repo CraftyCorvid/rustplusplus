@@ -342,6 +342,66 @@ module.exports = {
                     changedSwitches.push(entityId);
                 }
             }
+            else if (content.autoDayNightOnOff === 9) { /* AUTO-ON-TIMER */
+                let shouldBeOn = true;
+                const timeSeconds = Timer.getSecondsFromStringTime(content.onOffTimer);
+
+                if (!rustplus.currentSwitchTimeouts[entityId] && ((shouldBeOn && !content.active) || (!shouldBeOn && content.active))) {
+                    rustplus.currentSwitchTimeouts[entityId] = setTimeout(async function () {
+                        instance.serverList[serverId].switches[entityId].active = shouldBeOn;
+                        client.setInstance(guildId, instance);
+
+                        rustplus.interactionSwitches.push(entityId);
+
+                        const response = await rustplus.turnSmartSwitchAsync(entityId, shouldBeOn);
+                        if (!(await rustplus.isResponseValid(response))) {
+                            if (instance.serverList[serverId].switches[entityId].reachable) {
+                                await DiscordMessages.sendSmartSwitchNotFoundMessage(guildId, serverId, entityId);
+                            }
+                            instance.serverList[serverId].switches[entityId].reachable = false;
+
+                            rustplus.interactionSwitches = rustplus.interactionSwitches.filter(e => e !== entityId);
+                        }
+                        else {
+                            instance.serverList[serverId].switches[entityId].reachable = true;
+                        }
+                        client.setInstance(guildId, instance);
+
+                        DiscordMessages.sendSmartSwitchMessage(guildId, serverId, entityId);
+                        changedSwitches.push(entityId);
+                    }, timeSeconds * 1000);
+                }
+            }
+            else if (content.autoDayNightOnOff === 10) { /* AUTO-OFF-TIMER */
+                let shouldBeOn = false;
+                const timeSeconds = Timer.getSecondsFromStringTime(content.onOffTimer);
+
+                if (!rustplus.currentSwitchTimeouts[entityId] && ((shouldBeOn && !content.active) || (!shouldBeOn && content.active))) {
+                    rustplus.currentSwitchTimeouts[entityId] = setTimeout(async function () {
+                        instance.serverList[serverId].switches[entityId].active = shouldBeOn;
+                        client.setInstance(guildId, instance);
+
+                        rustplus.interactionSwitches.push(entityId);
+
+                        const response = await rustplus.turnSmartSwitchAsync(entityId, shouldBeOn);
+                        if (!(await rustplus.isResponseValid(response))) {
+                            if (instance.serverList[serverId].switches[entityId].reachable) {
+                                await DiscordMessages.sendSmartSwitchNotFoundMessage(guildId, serverId, entityId);
+                            }
+                            instance.serverList[serverId].switches[entityId].reachable = false;
+
+                            rustplus.interactionSwitches = rustplus.interactionSwitches.filter(e => e !== entityId);
+                        }
+                        else {
+                            instance.serverList[serverId].switches[entityId].reachable = true;
+                        }
+                        client.setInstance(guildId, instance);
+
+                        DiscordMessages.sendSmartSwitchMessage(guildId, serverId, entityId);
+                        changedSwitches.push(entityId);
+                    }, timeSeconds * 1000);
+                }
+            }
         }
 
         let groupsId = SmartSwitchGroupHandler.getGroupsFromSwitchList(
@@ -381,7 +441,6 @@ module.exports = {
         rest = rest.replace(`${entityCommand} ${offEn}`, '');
         rest = rest.replace(`${entityCommand} ${offLang}`, '');
         rest = rest.replace(`${entityCommand}`, '').trim();
-        rest = rest || switches[entityId].onOffTimer
 
         let active;
         if (command.startsWith(`${entityCommand} ${onEn}`) || command.startsWith(`${entityCommand} ${onLang}`)) {
