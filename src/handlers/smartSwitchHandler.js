@@ -381,7 +381,7 @@ module.exports = {
         rest = rest.replace(`${entityCommand} ${offEn}`, '');
         rest = rest.replace(`${entityCommand} ${offLang}`, '');
         rest = rest.replace(`${entityCommand}`, '').trim();
-        rest = rest || `${prefix}${switches[entityId].onOffTimer}`
+        rest = rest || switches[entityId].onOffTimer
 
         let active;
         if (command.startsWith(`${entityCommand} ${onEn}`) || command.startsWith(`${entityCommand} ${onLang}`)) {
