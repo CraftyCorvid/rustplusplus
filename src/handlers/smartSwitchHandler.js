@@ -369,6 +369,12 @@ module.exports = {
 
                         DiscordMessages.sendSmartSwitchMessage(guildId, serverId, entityId);
                         changedSwitches.push(entityId);
+                        const str = client.intlGet(guildId, 'automaticallyTurningBackOnOff', {
+                            device: instance.serverList[serverId].switches[entityId].name,
+                            status: client.intlGet(guildId, 'onCap')
+                        });
+            
+                        rustplus.sendInGameMessage(str);
                     }, timeSeconds * 1000);
                 }
             }
@@ -399,6 +405,12 @@ module.exports = {
 
                         DiscordMessages.sendSmartSwitchMessage(guildId, serverId, entityId);
                         changedSwitches.push(entityId);
+                        const str = client.intlGet(guildId, 'automaticallyTurningBackOnOff', {
+                            device: instance.serverList[serverId].switches[entityId].name,
+                            status: client.intlGet(guildId, 'offCap')
+                        });
+            
+                        rustplus.sendInGameMessage(str);
                     }, timeSeconds * 1000);
                 }
             }
