@@ -460,6 +460,11 @@ module.exports = {
                 active = true;
             }
             else {
+                const str = client.intlGet(guildId, 'deviceIsAlreadyOnOff', {
+                    device: switches[entityId].name,
+                    status: onCap
+                });
+                rustplus.sendInGameMessage(str);
                 return true;
             }
         }
@@ -468,6 +473,11 @@ module.exports = {
                 active = false;
             }
             else {
+                const str = client.intlGet(guildId, 'deviceIsAlreadyOnOff', {
+                    device: switches[entityId].name,
+                    status: offCap
+                });
+                rustplus.sendInGameMessage(str);
                 return true;
             }
         }
